@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProfilDesa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProfilDesaController extends Controller
 {
@@ -43,6 +44,9 @@ class ProfilDesaController extends Controller
             'peta_wilayah' => 'nullable|image|max:5120',
             'logo' => 'nullable|image|max:2048',
             'foto_hero' => 'nullable|image|max:6144',
+            'video_profil_url' => 'nullable|url|max:255',
+            'video_profil_judul' => 'nullable|string|max:120',
+            'video_profil_keterangan' => 'nullable|string|max:300',
         ]);
 
         $profil = ProfilDesa::first() ?? new ProfilDesa();
@@ -74,20 +78,35 @@ class ProfilDesaController extends Controller
             'telepon' => $validated['telepon'] ?? null,
             'email' => $validated['email'] ?? null,
             'jam_pelayanan' => $validated['jam_pelayanan'] ?? null,
+            'video_profil_url' => $validated['video_profil_url'] ?? null,
+            'video_profil_judul' => $validated['video_profil_judul'] ?? null,
+            'video_profil_keterangan' => $validated['video_profil_keterangan'] ?? null,
         ]);
 
+        // Berkas lama dihapus lebih dulu agar tidak menumpuk di server
         if ($request->hasFile('peta_wilayah')) {
+            $this->hapusBerkasLama($profil->peta_wilayah_path);
             $profil->peta_wilayah_path = $request->file('peta_wilayah')->store('profil-desa', 'public');
         }
         if ($request->hasFile('logo')) {
+            $this->hapusBerkasLama($profil->logo_path);
             $profil->logo_path = $request->file('logo')->store('profil-desa', 'public');
         }
         if ($request->hasFile('foto_hero')) {
+            $this->hapusBerkasLama($profil->foto_hero_path);
             $profil->foto_hero_path = $request->file('foto_hero')->store('profil-desa', 'public');
         }
 
         $profil->save();
 
         return back()->with('success', 'Profil desa berhasil diperbarui.');
+    }
+
+    /** Menghapus berkas lama bila ada, agar tidak menjadi berkas yatim */
+    private function hapusBerkasLama(?string $path): void
+    {
+        if ($path && Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
     }
 }

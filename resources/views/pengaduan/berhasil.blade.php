@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="max-w-3xl mx-auto">
-<div class="bg-white rounded-2xl border border-black/5 p-8 text-center">
+<div class="reveal-skala bg-white rounded-2xl border border-black/5 p-8 text-center">
     <p class="text-xs font-medium tracking-wide uppercase mb-2" style="color: var(--talang);">Laporan Berhasil Dikirim</p>
     <h1 class="font-display text-2xl font-semibold mb-4">Terima kasih atas laporan Anda</h1>
 

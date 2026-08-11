@@ -16,13 +16,17 @@ class ProfilDesa extends Model
         'nama_kepala_desa', 'peta_wilayah_path', 'logo_path',
         'alamat_kantor', 'telepon', 'email', 'jam_pelayanan', 'foto_hero_path',
         'latitude', 'longitude', 'zoom_peta',
+        'video_profil_url', 'video_profil_judul', 'video_profil_keterangan',
     ];
 
     protected $casts = [
         'misi' => 'array', // otomatis di-decode dari JSON jadi array poin misi
     ];
 
-    protected $appends = ['wilayah_lengkap', 'baris_jam_pelayanan'];
+    protected $appends = [
+        'wilayah_lengkap', 'baris_jam_pelayanan',
+        'id_video', 'video_embed', 'video_tonton', 'video_sampul',
+    ];
 
     /** Dipakai bila koordinat desa belum diisi dari dashboard */
     public const KOORDINAT_CADANGAN = ['lat' => -6.812528, 'lng' => 107.260071, 'zoom' => 15];
@@ -83,5 +87,48 @@ class ProfilDesa extends Model
         }
 
         return 'https://wa.me/' . $nomor;
+    }
+
+    // ================================================================
+    // VIDEO PENGENALAN DESA
+    // ================================================================
+
+    /**
+     * Mengambil kode video YouTube dari berbagai bentuk alamat yang biasa
+     * disalin perangkat desa: watch?v=, youtu.be, embed, shorts, dan live.
+     */
+    public function getIdVideoAttribute(): ?string
+    {
+        if (blank($this->video_profil_url)) {
+            return null;
+        }
+
+        $pola = '/(?:youtu\.be\/|youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/|live\/))([a-zA-Z0-9_-]{6,})/';
+
+        return preg_match($pola, $this->video_profil_url, $m) ? $m[1] : null;
+    }
+
+    /** Alamat untuk disematkan di dalam halaman */
+    public function getVideoEmbedAttribute(): ?string
+    {
+        $id = $this->id_video;
+
+        return $id ? "https://www.youtube.com/embed/{$id}?rel=0&autoplay=1" : null;
+    }
+
+    /** Alamat untuk dibuka di tab baru bila penyematan ditolak pemilik video */
+    public function getVideoTontonAttribute(): ?string
+    {
+        $id = $this->id_video;
+
+        return $id ? "https://www.youtube.com/watch?v={$id}" : $this->video_profil_url;
+    }
+
+    /** Gambar sampul video, diambil otomatis dari YouTube */
+    public function getVideoSampulAttribute(): ?string
+    {
+        $id = $this->id_video;
+
+        return $id ? "https://img.youtube.com/vi/{$id}/maxresdefault.jpg" : null;
     }
 }

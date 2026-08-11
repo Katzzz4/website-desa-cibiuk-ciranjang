@@ -38,7 +38,7 @@
     </div>
 
     <div class="bg-white rounded-2xl border border-black/5 p-6 space-y-4">
-        <h2 class="font-display text-base font-semibold mb-1">Sejarah, Visi & Misi</h2>
+        <h2 class="font-display text-base font-semibold mb-1">Sejarah, Visi &amp; Misi</h2>
         <div>
             <label class="text-xs text-black/50 mb-1 block">Sejarah Singkat</label>
             <textarea name="sejarah" rows="5" class="w-full rounded-lg border-black/10 text-sm">{{ old('sejarah', $profil->sejarah ?? '') }}</textarea>
@@ -174,6 +174,62 @@
                 <img src="{{ Storage::url($profil->logo_path) }}" class="w-20 h-20 object-contain rounded-lg mb-2">
             @endif
             <input type="file" name="logo" accept="image/*" class="w-full text-sm">
+        </div>
+    </div>
+
+    {{-- ============ VIDEO PENGENALAN DESA ============ --}}
+    <div class="bg-white rounded-2xl border border-black/5 p-6 space-y-4">
+        <div>
+            <h2 class="font-display text-base font-semibold">Video Pengenalan Desa</h2>
+            <p class="text-xs text-black/45 mt-1 leading-relaxed">
+                Video ditampilkan di beranda. Unggah dulu videonya ke YouTube, lalu salin
+                alamatnya ke sini. Pastikan status videonya <strong>Publik</strong> atau
+                <strong>Tidak Publik</strong> &mdash; video berstatus Privat tidak akan
+                bisa tampil di situs.
+            </p>
+        </div>
+
+        <div>
+            <label class="text-xs text-black/50 mb-1 block">Alamat Video YouTube</label>
+            <input type="url" name="video_profil_url"
+                   value="{{ old('video_profil_url', $profil->video_profil_url ?? '') }}"
+                   placeholder="https://www.youtube.com/watch?v=..."
+                   class="w-full rounded-lg border-black/10 text-sm">
+            <p class="text-xs text-black/40 mt-1">
+                Kosongkan bila belum ada video. Bagian video otomatis disembunyikan dari beranda.
+            </p>
+            @error('video_profil_url') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+        </div>
+
+        @if($profil?->id_video)
+            <div class="flex items-center gap-3 p-3 rounded-lg" style="background: var(--sawah-light);">
+                <img src="{{ $profil->video_sampul }}" alt=""
+                     class="w-24 h-14 object-cover rounded shrink-0"
+                     onerror="this.src='https://img.youtube.com/vi/{{ $profil->id_video }}/hqdefault.jpg'">
+                <div class="min-w-0">
+                    <p class="text-xs font-medium" style="color: var(--sawah-dark);">Video sudah terpasang</p>
+                    <a href="{{ $profil->video_tonton }}" target="_blank" rel="noopener"
+                       class="text-xs underline underline-offset-2" style="color: var(--talang);">
+                        Buka di YouTube
+                    </a>
+                </div>
+            </div>
+        @endif
+
+        <div>
+            <label class="text-xs text-black/50 mb-1 block">Judul Bagian (opsional)</label>
+            <input type="text" name="video_profil_judul" maxlength="120"
+                   value="{{ old('video_profil_judul', $profil->video_profil_judul ?? '') }}"
+                   placeholder="Video Pengenalan Desa Cibiuk"
+                   class="w-full rounded-lg border-black/10 text-sm">
+            <p class="text-xs text-black/40 mt-1">Bila dikosongkan, judul bawaan yang dipakai.</p>
+        </div>
+
+        <div>
+            <label class="text-xs text-black/50 mb-1 block">Keterangan Singkat (opsional)</label>
+            <textarea name="video_profil_keterangan" rows="3" maxlength="300"
+                      placeholder="Contoh: Sekilas mengenai wilayah, potensi, dan kegiatan warga Desa Cibiuk."
+                      class="w-full rounded-lg border-black/10 text-sm">{{ old('video_profil_keterangan', $profil->video_profil_keterangan ?? '') }}</textarea>
         </div>
     </div>
 

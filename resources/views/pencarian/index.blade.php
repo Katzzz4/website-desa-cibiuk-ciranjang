@@ -40,7 +40,7 @@
 
     {{-- ============ KEADAAN KHUSUS ============ --}}
     @if($kata === '')
-        <div class="kartu p-10 text-center">
+        <div class="reveal-skala kartu p-10 text-center">
             <p class="font-display text-base font-bold mb-1">Belum ada kata kunci</p>
             <p class="text-sm" style="color: var(--lembut);">
                 Masukkan kata kunci di kolom pencarian di atas untuk mulai mencari.
@@ -48,7 +48,7 @@
         </div>
 
     @elseif($terlaluPendek)
-        <div class="kartu p-10 text-center">
+        <div class="reveal-skala kartu p-10 text-center">
             <p class="font-display text-base font-bold mb-1">Kata kunci terlalu pendek</p>
             <p class="text-sm" style="color: var(--lembut);">
                 Gunakan minimal {{ $minimalHuruf }} huruf agar hasil pencarian lebih tepat.
@@ -56,7 +56,7 @@
         </div>
 
     @elseif($jumlah === 0)
-        <div class="kartu p-10 text-center">
+        <div class="reveal-skala kartu p-10 text-center">
             <p class="font-display text-base font-bold mb-1">Tidak ada hasil untuk &ldquo;{{ $kata }}&rdquo;</p>
             <p class="text-sm mb-6" style="color: var(--lembut);">
                 Coba gunakan kata yang lebih umum, atau periksa kembali ejaannya.
@@ -84,7 +84,7 @@
                               style="background: var(--sawah-light); color: var(--sawah-dark);">{{ $berita->count() }}</span>
                     </div>
 
-                    <div class="kartu overflow-hidden">
+                    <div class="reveal kartu overflow-hidden">
                         @foreach ($berita as $b)
                             <a href="{{ route('berita.show', $b->slug) }}"
                                class="block px-5 py-4 hover:bg-black/[0.02] transition {{ !$loop->last ? 'border-b' : '' }}"
@@ -115,7 +115,7 @@
                               style="background: var(--sawah-light); color: var(--sawah-dark);">{{ $dokumen->count() }}</span>
                     </div>
 
-                    <div class="kartu overflow-hidden">
+                    <div class="reveal kartu overflow-hidden">
                         @foreach ($dokumen as $d)
                             <div class="flex items-center gap-4 px-5 py-4 {{ !$loop->last ? 'border-b' : '' }}"
                                  style="border-color: var(--garis);">
@@ -147,7 +147,7 @@
                               style="background: var(--sawah-light); color: var(--sawah-dark);">{{ $agenda->count() }}</span>
                     </div>
 
-                    <div class="kartu overflow-hidden">
+                    <div class="reveal kartu overflow-hidden">
                         @foreach ($agenda as $a)
                             <div class="flex gap-4 px-5 py-4 {{ !$loop->last ? 'border-b' : '' }}"
                                  style="border-color: var(--garis);">
@@ -184,7 +184,7 @@
                               style="background: var(--sawah-light); color: var(--sawah-dark);">{{ $potensi->count() }}</span>
                     </div>
 
-                    <div class="kartu overflow-hidden">
+                    <div class="reveal kartu overflow-hidden">
                         @foreach ($potensi as $p)
                             <div class="flex gap-4 px-5 py-4 {{ !$loop->last ? 'border-b' : '' }}"
                                  style="border-color: var(--garis);">

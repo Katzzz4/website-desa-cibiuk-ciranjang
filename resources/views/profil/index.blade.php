@@ -9,7 +9,7 @@
 <div class="space-y-10">
 
     {{-- HERO --}}
-    <div class="relative overflow-hidden rounded-3xl text-white terrace-texture p-8 sm:p-10" style="background: linear-gradient(150deg, var(--sawah-dark), var(--sawah-darker));">
+    <div class="reveal-skala relative overflow-hidden rounded-3xl text-white terrace-texture p-8 sm:p-10" style="background: linear-gradient(150deg, var(--sawah-dark), var(--sawah-darker));">
         <p class="text-xs font-medium tracking-widest uppercase" style="color: var(--padi-light);">Selamat Datang di Profil</p>
         <h1 class="font-display text-4xl sm:text-5xl font-semibold mt-2 leading-tight">
             Desa {{ $profil->nama_desa ?? 'Cibiuk' }}
@@ -44,7 +44,7 @@
     </div>
 
     {{-- SEJARAH --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+    <div class="reveal-kiri bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
         <div class="flex items-center gap-2 mb-3">
             <span class="w-1.5 h-5 rounded-full" style="background: var(--padi);"></span>
             <h2 class="font-display text-lg font-semibold">Sejarah Singkat</h2>
@@ -53,7 +53,7 @@
     </div>
 
     {{-- VISI MISI --}}
-    <div class="rounded-2xl p-6 sm:p-8 text-white terrace-texture" style="background: var(--sawah-dark);">
+    <div class="reveal-kanan rounded-2xl p-6 sm:p-8 text-white terrace-texture" style="background: var(--sawah-dark);">
         <p class="text-xs uppercase tracking-widest" style="color: var(--padi-light);">Visi</p>
         <p class="font-display text-xl sm:text-2xl font-semibold leading-snug mt-2 mb-7">
             &ldquo;{{ $profil->visi ?? '-' }}&rdquo;
@@ -76,7 +76,7 @@
     </div>
 
     {{-- PETA SOSIAL DESA --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
         <div class="flex items-center gap-2 mb-2">
             <span class="w-1.5 h-5 rounded-full" style="background: var(--talang);"></span>
             <h2 class="font-display text-lg font-semibold">Peta Sosial Desa</h2>
@@ -106,7 +106,7 @@
     </div>
 
     {{-- GEOGRAFIS --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+    <div class="reveal-kiri bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
         <div class="flex items-center gap-2 mb-5">
             <span class="w-1.5 h-5 rounded-full" style="background: var(--talang);"></span>
             <h2 class="font-display text-lg font-semibold">Kondisi Geografis</h2>
@@ -155,58 +155,8 @@
         </div>
     </div>
 
-    {{-- STRUKTUR ORGANISASI --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
-        <div class="flex items-center gap-2 mb-1">
-            <span class="w-1.5 h-5 rounded-full" style="background: var(--padi);"></span>
-            <h2 class="font-display text-lg font-semibold">Struktur Organisasi Pemerintah Desa</h2>
-        </div>
-        <p class="text-sm text-black/50 mb-7 ml-3.5">
-            Dipimpin oleh {{ $perangkat->firstWhere('jabatan', 'Kepala Desa')->nama ?? '-' }} sebagai Kepala Desa
-        </p>
-
-        <div class="space-y-6">
-            @php
-                $kepalaDesa = $perangkat->firstWhere('atasan_jabatan', null);
-                $lapisKedua = $perangkat->where('atasan_jabatan', $kepalaDesa->jabatan ?? '___');
-                $lapisKetiga = $perangkat->whereIn('atasan_jabatan', $lapisKedua->pluck('jabatan')->all());
-            @endphp
-
-            @if($kepalaDesa)
-                <div class="flex justify-center">
-                    <div class="text-center rounded-xl px-6 py-4" style="background: var(--sawah-dark);">
-                        <p class="text-sm font-semibold text-white">{{ $kepalaDesa->nama }}</p>
-                        <p class="text-xs mt-0.5" style="color: var(--padi-light);">{{ $kepalaDesa->jabatan }}</p>
-                    </div>
-                </div>
-            @endif
-
-            @if($lapisKedua->count())
-                <div class="flex flex-wrap justify-center gap-3 pt-2">
-                    @foreach ($lapisKedua as $p)
-                        <div class="text-center rounded-xl px-4 py-3 border-2 min-w-[140px]" style="border-color: var(--sawah-light); background: var(--sawah-light);">
-                            <p class="text-sm font-medium" style="color: var(--sawah-dark);">{{ $p->nama }}</p>
-                            <p class="text-xs text-black/50 mt-0.5">
-                                {{ $p->jabatan }}
-                                @if($p->dusun) · {{ $p->dusun->nama }} @endif
-                            </p>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-
-            @if($lapisKetiga->count())
-                <div class="flex flex-wrap justify-center gap-2.5 pt-4 border-t border-dashed border-black/10">
-                    @foreach ($lapisKetiga as $p)
-                        <div class="text-center rounded-lg px-3.5 py-2 bg-black/[0.02] min-w-[125px]">
-                            <p class="text-xs font-medium">{{ $p->nama }}</p>
-                            <p class="text-[11px] text-black/50">{{ $p->jabatan }}</p>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
-        </div>
-    </div>
+    {{-- STRUKTUR ORGANISASI & TUPOKSI --}}
+    @include('partials.struktur-organisasi')
 
 </div>
 @endsection

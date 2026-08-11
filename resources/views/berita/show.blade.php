@@ -34,10 +34,10 @@
     </div>
 
     @if($berita->thumbnail_path)
-        <img src="{{ Storage::url($berita->thumbnail_path) }}" class="rounded-2xl w-full aspect-video object-cover">
+        <img src="{{ Storage::url($berita->thumbnail_path) }}" class="reveal-skala rounded-2xl w-full aspect-video object-cover">
     @endif
 
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
         <div class="prose prose-sm teks-baca text-black/75 leading-relaxed">
             {!! nl2br(e($berita->konten)) !!}
         </div>
@@ -48,7 +48,7 @@
             <h2 class="font-display text-lg font-semibold mb-4">Berita Lainnya</h2>
             <div class="grid sm:grid-cols-3 gap-4">
                 @foreach ($lainnya as $l)
-                    <a href="{{ route('berita.show', $l->slug) }}" class="bg-white rounded-xl border border-black/5 p-4 hover:shadow-md transition">
+                    <a href="{{ route('berita.show', $l->slug) }}" class="reveal bg-white rounded-xl border border-black/5 p-4 hover:shadow-md transition" style="transition-delay: {{ $loop->index * 70 }}ms;">
                         <p class="text-xs text-black/40 mb-1">{{ $l->tanggal_publish->translatedFormat('d M Y') }}</p>
                         <p class="text-sm font-medium leading-snug line-clamp-2">{{ $l->judul }}</p>
                     </a>

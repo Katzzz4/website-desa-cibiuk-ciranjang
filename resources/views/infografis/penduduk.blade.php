@@ -6,7 +6,7 @@
 <div class="space-y-10">
 
     {{-- HERO --}}
-    <div class="relative overflow-hidden rounded-3xl text-white terrace-texture p-8 sm:p-10" style="background: linear-gradient(150deg, var(--sawah-dark), var(--sawah-darker));">
+    <div class="reveal-skala relative overflow-hidden rounded-3xl text-white terrace-texture p-8 sm:p-10" style="background: linear-gradient(150deg, var(--sawah-dark), var(--sawah-darker));">
         <p class="text-xs font-medium tracking-widest uppercase" style="color: var(--padi-light);">Data Kependudukan</p>
         <h1 class="font-display text-3xl sm:text-4xl font-semibold mt-2 leading-tight">Infografis Penduduk</h1>
         <p class="text-sm text-white/70 mt-2">Desa Cibiuk, tahun data {{ $ringkasan->tahun ?? '-' }}</p>
@@ -33,7 +33,7 @@
 
     {{-- MUTASI PENDUDUK --}}
     @if($ringkasan)
-        <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+        <div class="reveal bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
             <div class="flex items-center gap-2 mb-5">
                 <span class="w-1.5 h-5 rounded-full" style="background: var(--talang);"></span>
                 <h2 class="font-display text-lg font-semibold">Perkembangan Penduduk {{ $ringkasan->tahun }}</h2>
@@ -60,7 +60,7 @@
     @endif
 
     {{-- DONUT L/P --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
         <div class="flex items-center gap-2 mb-5">
             <span class="w-1.5 h-5 rounded-full" style="background: var(--padi);"></span>
             <h2 class="font-display text-lg font-semibold">Berdasarkan Jenis Kelamin</h2>
@@ -73,7 +73,7 @@
     {{-- CHART PER KATEGORI --}}
     @foreach ($kategori as $k)
         @if($k->data->count())
-            <div class="bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
+            <div class="reveal bg-white rounded-2xl border border-black/5 p-6 sm:p-8">
                 <div class="flex items-center gap-2 mb-5">
                     <span class="w-1.5 h-5 rounded-full" style="background: var(--talang);"></span>
                     <h2 class="font-display text-lg font-semibold">Berdasarkan {{ $k->nama }}</h2>

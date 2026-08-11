@@ -27,7 +27,6 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TransparansiController;
 use App\Http\Controllers\PencarianController;
 use App\Http\Controllers\PetaWilayahController;
-use App\Http\Controllers\Admin\PetaLayerController;
 
 // ====================================================================
 // HALAMAN PUBLIK
@@ -145,11 +144,6 @@ Route::middleware(['auth', 'verified', \App\Http\Middleware\EnsureIsAdmin::class
             Route::resource('potensi', AdminPotensiController::class)
                 ->except(['show'])
                 ->parameters(['potensi' => 'potensi']);
-
-            Route::resource('peta-layer', PetaLayerController::class)
-                ->except(['show'])
-                ->parameters(['peta-layer' => 'peta_layer']);
-
         }); // akhir pengelolaan isi situs
 
         // ------------------------------------------------------------------

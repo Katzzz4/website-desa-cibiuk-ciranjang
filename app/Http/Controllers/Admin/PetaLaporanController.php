@@ -7,7 +7,6 @@ use App\Models\Laporan;
 use App\Models\KategoriLaporan;
 use App\Models\Dusun;
 use App\Models\ProfilDesa;
-use App\Models\PetaLayer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -123,11 +122,9 @@ class PetaLaporanController extends Controller
 
         $titikPeta = (ProfilDesa::first()?->titik_peta) ?? ProfilDesa::KOORDINAT_CADANGAN;
 
-        $layerPeta = PetaLayer::aktif()->where('tampil_di_pengaduan', true)
-            ->get()->map(fn ($l) => $l->untukPeta());
 
         return view('admin.laporan.peta', compact(
-            'titikPeta', 'layerPeta',
+            'titikPeta',
             'markers', 'kategoriList', 'dusunList', 'jumlahPerStatus',
             'tanpaLokasi', 'daftarPeriode', 'periode', 'labelPeriode',
             'isPeriodeBerjalan', 'tunggakan'

@@ -67,7 +67,7 @@
     {{-- ---------- Daftar dokumen ---------- --}}
     <div class="space-y-3">
         @forelse ($dokumen as $d)
-            <div class="kartu p-5 flex items-center gap-4">
+            <div class="reveal kartu p-5 flex items-center gap-4" style="transition-delay: {{ $loop->index * 55 }}ms;">
                 <div class="shrink-0 w-12 h-14 rounded-lg flex items-center justify-center text-[10px] font-semibold uppercase tracking-wide"
                      style="background: var(--sawah-light); color: var(--sawah-dark);">
                     {{ $d->ekstensi }}

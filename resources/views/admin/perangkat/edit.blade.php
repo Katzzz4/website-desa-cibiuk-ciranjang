@@ -3,6 +3,7 @@
 @section('title', 'Edit Perangkat Desa')
 
 @section('content')
+@php $isiTupoksi = $perangkat->tupoksi; @endphp
 <form method="POST" action="{{ route('admin.perangkat.update', $perangkat) }}" enctype="multipart/form-data" class="max-w-xl space-y-5">
     @csrf
     @method('PUT')
@@ -20,6 +21,18 @@
                 @endforeach
             </datalist>
         </div>
+        <div>
+            <label class="text-xs text-black/50 mb-1 block">Tugas Pokok dan Fungsi</label>
+            <textarea name="tupoksi" rows="4" maxlength="1000"
+                      placeholder="Contoh: Melayani administrasi kependudukan, pengurusan surat pengantar, dan pencatatan data warga."
+                      class="w-full rounded-lg border-black/10 text-sm">{{ old('tupoksi', $isiTupoksi) }}</textarea>
+            <p class="text-xs text-black/40 mt-1">
+                Ditampilkan pada bagan struktur organisasi, agar warga tahu urusannya
+                harus disampaikan ke bagian mana. Boleh dikosongkan.
+            </p>
+            @error('tupoksi') <p class="text-xs text-red-600 mt-1">{{ $message }}</p> @enderror
+        </div>
+
         <div>
             <label class="text-xs text-black/50 mb-1 block">Atasan Langsung</label>
             <input type="text" name="atasan_jabatan" value="{{ old('atasan_jabatan', $perangkat->atasan_jabatan) }}" list="daftar-jabatan" class="w-full rounded-lg border-black/10 text-sm">

@@ -36,7 +36,7 @@
     {{-- GRID POTENSI --}}
     <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
         @forelse ($potensi as $p)
-            <div class="bg-white rounded-2xl border border-black/5 overflow-hidden flex flex-col">
+            <div class="reveal-skala bg-white rounded-2xl border border-black/5 overflow-hidden flex flex-col" style="transition-delay: {{ ($loop->index % 3) * 80 }}ms;">
                 <div class="aspect-[16/10] bg-[var(--sawah-light)] overflow-hidden shrink-0">
                     @if($p->foto_path)
                         <img src="{{ Storage::url($p->foto_path) }}" alt="{{ $p->nama }}" class="w-full h-full object-cover">

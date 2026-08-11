@@ -19,7 +19,7 @@
 
         <div class="space-y-3">
             @forelse ($mendatang as $a)
-                <div class="bg-white rounded-2xl border border-black/5 p-5 flex gap-4">
+                <div class="reveal-kiri bg-white rounded-2xl border border-black/5 p-5 flex gap-4" style="transition-delay: {{ $loop->index * 70 }}ms;">
                     <div class="shrink-0 w-16 text-center rounded-xl py-2" style="background: var(--sawah-light); color: var(--sawah-dark);">
                         <p class="text-xs uppercase font-medium">{{ $a->tanggal_mulai->translatedFormat('M') }}</p>
                         <p class="font-display text-xl font-semibold leading-none mt-0.5">{{ $a->tanggal_mulai->format('d') }}</p>
@@ -52,7 +52,7 @@
 
             <div class="space-y-3">
                 @foreach ($lampau as $a)
-                    <div class="bg-white rounded-2xl border border-black/5 p-5 flex gap-4 opacity-70">
+                    <div class="reveal bg-white rounded-2xl border border-black/5 p-5 flex gap-4 opacity-70" style="transition-delay: {{ $loop->index * 60 }}ms;">
                         <div class="shrink-0 w-16 text-center rounded-xl py-2 bg-black/[0.04]">
                             <p class="text-xs uppercase font-medium text-black/50">{{ $a->tanggal_mulai->translatedFormat('M') }}</p>
                             <p class="font-display text-xl font-semibold leading-none mt-0.5">{{ $a->tanggal_mulai->format('d') }}</p>

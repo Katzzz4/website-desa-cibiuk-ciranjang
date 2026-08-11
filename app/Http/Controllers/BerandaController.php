@@ -9,6 +9,7 @@ use App\Models\Berita;
 use App\Models\Agenda;
 use App\Models\Laporan;
 use App\Models\PotensiDesa;
+use App\Models\PerangkatDesa;
 
 class BerandaController extends Controller
 {
@@ -30,16 +31,23 @@ class BerandaController extends Controller
 
         $potensiSorotan = PotensiDesa::latest()->take(3)->get();
 
+        $perangkat = PerangkatDesa::with('dusun')->orderBy('urutan')->get();
+
+        // dipakai pada bagian peta wilayah
+        $dusun = Dusun::orderBy('nama')->get();
+
         $totalLaporan = Laporan::count();
         $laporanSelesai = Laporan::where('status', 'selesai')->count();
 
         return view('beranda', [
             'profil' => $profil,
             'ringkasan' => $ringkasan,
-            'jumlahDusun' => Dusun::count(),
+            'dusun' => $dusun,
+            'jumlahDusun' => $dusun->count(),
             'beritaTerbaru' => $beritaTerbaru,
             'agendaTerdekat' => $agendaTerdekat,
             'potensiSorotan' => $potensiSorotan,
+            'perangkat' => $perangkat,
             'totalLaporan' => $totalLaporan,
             'laporanSelesai' => $laporanSelesai,
             'persenSelesai' => $totalLaporan > 0 ? round($laporanSelesai / $totalLaporan * 100) : null,

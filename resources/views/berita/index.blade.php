@@ -32,7 +32,7 @@
 @if($sorotan)
     <section class="bg-white border-y border-black/5">
         <div class="wadah py-10">
-            <a href="{{ route('berita.show', $sorotan->slug) }}" class="group grid lg:grid-cols-2 gap-7 lg:gap-10 items-center">
+            <a href="{{ route('berita.show', $sorotan->slug) }}" class="reveal-kiri group grid lg:grid-cols-2 gap-7 lg:gap-10 items-center">
 
                 <div class="aspect-[16/10] rounded-2xl overflow-hidden bg-[var(--sawah-light)] order-1">
                     @if($sorotan->thumbnail_path)
@@ -92,7 +92,8 @@
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             @foreach ($sisanya as $b)
                 <a href="{{ route('berita.show', $b->slug) }}"
-                   class="bg-white rounded-2xl border border-black/5 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition duration-200 group flex flex-col">
+                   class="reveal bg-white rounded-2xl border border-black/5 overflow-hidden hover:shadow-md hover:-translate-y-0.5 transition duration-200 group flex flex-col"
+                   style="transition-delay: {{ ($loop->index % 3) * 80 }}ms;">
                     <div class="aspect-[16/10] bg-[var(--sawah-light)] overflow-hidden shrink-0">
                         @if($b->thumbnail_path)
                             <img src="{{ Storage::url($b->thumbnail_path) }}" alt="{{ $b->judul }}"

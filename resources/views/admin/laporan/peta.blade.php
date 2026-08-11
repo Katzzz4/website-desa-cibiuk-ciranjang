@@ -187,22 +187,6 @@
 
     // marker yang berdekatan otomatis mengelompok, memisah saat di-zoom
 
-    // ---- Lapisan wilayah dari data peta desa ----
-    @foreach ($layerPeta as $lp)
-        fetch(@json($lp['url']))
-            .then(r => r.json())
-            .then(data => L.geoJSON(data, {
-                style: {
-                    color: @json($lp['warna']),
-                    weight: 2,
-                    fillColor: @json($lp['warna']),
-                    fillOpacity: {{ $lp['opasitas'] }},
-                },
-                interactive: false,   // agar tidak menghalangi penandaan lokasi
-            }).addTo(map))
-            .catch(() => console.warn('Lapisan peta gagal dimuat:', @json($lp['nama'])));
-    @endforeach
-
     const clusterGroup = L.markerClusterGroup({
         maxClusterRadius: 45,
         spiderfyOnMaxZoom: true,

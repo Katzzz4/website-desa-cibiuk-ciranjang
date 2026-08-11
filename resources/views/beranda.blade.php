@@ -1,7 +1,7 @@
 @extends('layouts.publik')
 
 @section('title', 'Beranda')
-@section('main-class', '')
+@section('main-class', 'overflow-x-hidden max-w-full')
 @section('header-transparan', 'ya')
 
 @section('content')
@@ -27,7 +27,7 @@
         <div class="absolute inset-0 terrace-texture opacity-60"></div>
     @endif
 
-    <div class="relative w-full wadah py-24 md:py-32 text-center text-white">
+    <div class="relative w-full max-w-full min-w-0 wadah py-24 md:py-32 text-center text-white">
         <p class="label-bagian anim-hero tunda-1" style="color: rgba(255,255,255,.72);">
             Website Resmi Pemerintah Desa
         </p>
@@ -40,7 +40,7 @@
                 <span style="animation-delay: .26s;">Selamat Datang</span>
             </span>
             <span class="baris-judul">
-                <span class="whitespace-nowrap" style="animation-delay: .42s;">Website Resmi Desa {{ $profil->nama_desa ?? 'Cibiuk' }}</span>
+                <span class="break-words" style="animation-delay: .42s;">Website Resmi Desa {{ $profil->nama_desa ?? 'Cibiuk' }}</span>
             </span>
         </h1>
 
@@ -67,6 +67,9 @@
         </div>
     </div>
 
+    {{-- Garis motif tipis sebagai pembatas ke bagian berikutnya --}}
+    <span class="absolute inset-x-0 bottom-0 h-2.5 motif-anyaman-terang opacity-70"></span>
+
     {{-- Penanda gulir, hanya di layar besar tempat hero setinggi satu layar --}}
     <a href="#layanan-cepat" aria-label="Lihat isi selanjutnya"
        class="anim-hero hidden md:flex absolute bottom-8 left-1/2 -translate-x-1/2 flex-col items-center gap-2
@@ -81,7 +84,7 @@
 </section>
 
 {{-- ============ LAYANAN CEPAT ============ --}}
-<section id="layanan-cepat" class="border-b" style="border-color: var(--garis);">
+<section id="layanan-cepat" class="pola-titik border-b" style="border-color: var(--garis);">
     <div class="wadah py-10">
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
             @php
@@ -100,7 +103,7 @@
             @endphp
 
             @foreach ($layanan as [$judul, $ket, $tautan, $path])
-                <a href="{{ $tautan }}" class="reveal-skala kartu kartu-tautan p-5 block"
+                <a href="{{ $tautan }}" class="reveal-skala kartu kartu-tautan kartu-aksen p-5 block"
                    style="transition-delay: {{ $loop->index * 55 }}ms;">
                     <span class="inline-flex items-center justify-center w-10 h-10 rounded-lg mb-3"
                           style="background: var(--sawah-light); color: var(--sawah-dark);">
@@ -116,6 +119,10 @@
         </div>
     </div>
 </section>
+
+{{-- ============ VIDEO PENGENALAN DESA ============ --}}
+{{-- Otomatis tersembunyi bila alamat videonya belum diisi dari dashboard --}}
+@include('partials.video-desa')
 
 {{-- ============ DESA DALAM ANGKA ============ --}}
 @php
@@ -135,9 +142,95 @@
     };
 @endphp
 
+{{--
+    PETA WILAYAH DESA — RINGKASAN UNTUK BERANDA
+
+    Menampilkan gambar peta sosial berdampingan dengan batas wilayah dan
+    daftar dusun. Otomatis tersembunyi bila gambar petanya belum diunggah.
+
+    Membutuhkan variabel $profil dan $dusun. Pemakaian:
+        @include('partials.peta-beranda')
+--}}
+
+@if($profil?->peta_wilayah_path)
+    <section class="border-t" style="border-color: var(--garis);">
+        <div class="wadah py-11">
+
+            <div class="flex items-end justify-between gap-4 mb-7 reveal">
+                <div>
+                    <p class="label-bagian">Geografis</p>
+                    <h2 class="font-display text-2xl font-bold mt-1.5">Peta Wilayah Desa</h2>
+                </div>
+                <a href="{{ route('peta.index') }}"
+                   class="text-sm font-medium whitespace-nowrap shrink-0 hover:underline underline-offset-4"
+                   style="color: var(--padi);">
+                    Lihat selengkapnya &rarr;
+                </a>
+            </div>
+
+            <div class="grid lg:grid-cols-3 gap-5">
+
+                {{-- Gambar peta --}}
+                <a href="{{ route('peta.index') }}"
+                   class="reveal-skala kartu kartu-tautan overflow-hidden lg:col-span-2 block group">
+                    <div class="aspect-[16/10] overflow-hidden" style="background: var(--sawah-light);">
+                        <img src="{{ Storage::url($profil->peta_wilayah_path) }}"
+                             alt="Peta wilayah Desa {{ $profil->nama_desa ?? 'Cibiuk' }}"
+                             class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+                             loading="lazy">
+                    </div>
+                </a>
+
+                {{-- Keterangan wilayah --}}
+                <div class="reveal-kanan kartu p-6 flex flex-col self-start">
+
+                    @if($profil?->luas_wilayah_ha)
+                        <div class="pb-4 mb-4 border-b" style="border-color: var(--garis);">
+                            <p class="text-xs" style="color: var(--lembut);">Luas Wilayah</p>
+                            <p class="font-display text-2xl font-bold mt-0.5" style="color: var(--sawah-dark);">
+                                {{ number_format($profil->luas_wilayah_ha, 0, ',', '.') }}
+                                <span class="text-base font-medium">Ha</span>
+                            </p>
+                        </div>
+                    @endif
+
+                    <p class="label-bagian mb-2.5">Berbatasan Dengan</p>
+                    <div class="space-y-1.5 mb-5">
+                        @foreach ([
+                            ['Utara',   $profil->batas_utara ?? null],
+                            ['Selatan', $profil->batas_selatan ?? null],
+                            ['Timur',   $profil->batas_timur ?? null],
+                            ['Barat',   $profil->batas_barat ?? null],
+                        ] as [$arah, $nilai])
+                            @if($nilai)
+                                <div class="flex items-start justify-between gap-3">
+                                    <span class="text-xs shrink-0" style="color: var(--lembut);">{{ $arah }}</span>
+                                    <span class="text-xs font-medium text-right">{{ $nilai }}</span>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+
+                    @if($dusun->count())
+                        <p class="label-bagian mb-2.5">Terbagi Atas</p>
+                        <div class="flex flex-wrap gap-2 mt-auto">
+                            @foreach ($dusun as $d)
+                                <span class="text-xs px-3 py-1.5 rounded-full"
+                                      style="background: var(--sawah-light); color: var(--sawah-dark);">
+                                    Dusun {{ $d->nama }}
+                                </span>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </section>
+@endif
+
 @if($statistik->count())
-    <section style="background: var(--kertas);">
-        <div class="wadah py-12">
+    <section class="pola-petak lengkung-atas" style="background: var(--kertas);">
+        <div class="wadah py-10">
             <div class="reveal">
                 <p class="label-bagian">Desa dalam Angka</p>
                 <h2 class="font-display text-2xl font-bold mt-1.5">Gambaran Singkat</h2>
@@ -145,12 +238,34 @@
 
             <div class="grid grid-cols-2 {{ $kolom }} gap-px mt-8 rounded-xl overflow-hidden"
                  style="background: var(--garis); border: 1px solid var(--garis);">
+                @php
+                    // ikon sederhana untuk tiap angka, agar kartunya tidak polos
+                    $ikonAngka = [
+                        'Jiwa Penduduk'    => 'M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z',
+                        'Dusun'            => 'M8.25 21v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21m0 0h4.5V3.545M12.75 21h7.5V10.75M2.25 21h1.5m18 0h-18M2.25 9l4.5-1.636M18.75 3l-1.5.545m0 6.205l3 1m1.5.5l-1.5-.5M6.75 7.364V3h-3v18m3-13.636l10.5-3.819',
+                        'Hektar Wilayah'   => 'M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z',
+                        'Kepala Keluarga'  => 'M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25',
+                    ];
+                @endphp
+
                 @foreach ($statistik as $s)
-                    <div class="reveal-skala bg-white px-5 py-6" style="transition-delay: {{ $loop->index * 60 }}ms;">
-                        <p class="font-display text-3xl font-bold" style="color: var(--sawah-dark);">
+                    <div class="reveal-skala bg-white px-5 py-6 relative overflow-hidden"
+                         style="transition-delay: {{ $loop->index * 60 }}ms;">
+
+                        {{-- ikon samar sebagai latar, mengisi bidang kosong di kanan kartu --}}
+                        @if(isset($ikonAngka[$s['label']]))
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.1" stroke="currentColor"
+                                 class="absolute -right-3 -bottom-3 w-20 h-20 pointer-events-none"
+                                 style="color: var(--sawah-dark); opacity: .07;">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="{{ $ikonAngka[$s['label']] }}" />
+                            </svg>
+                        @endif
+
+                        <p class="relative font-display text-3xl font-bold" style="color: var(--sawah-dark);">
                             <span data-angka="{{ $s['angka'] }}" data-desimal="0">0</span>
                         </p>
-                        <p class="text-xs mt-1.5" style="color: var(--lembut);">{{ $s['label'] }}</p>
+                        <p class="relative text-xs mt-1.5" style="color: var(--lembut);">{{ $s['label'] }}</p>
                     </div>
                 @endforeach
             </div>
@@ -167,7 +282,7 @@
 {{-- ============ BERITA TERBARU ============ --}}
 @if($beritaTerbaru->count())
     <section class="border-t" style="border-color: var(--garis);">
-        <div class="wadah py-14">
+        <div class="wadah py-11">
             <div class="flex items-end justify-between gap-4 mb-7 reveal">
                 <div>
                     <p class="label-bagian">Kabar Desa</p>
@@ -183,7 +298,7 @@
             <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 @foreach ($beritaTerbaru as $b)
                     <a href="{{ route('berita.show', $b->slug) }}"
-                       class="reveal kartu kartu-tautan overflow-hidden flex flex-col"
+                       class="reveal kartu kartu-tautan kartu-aksen overflow-hidden flex flex-col"
                        style="transition-delay: {{ $loop->index * 70 }}ms;">
                         <div class="aspect-[16/9] overflow-hidden shrink-0" style="background: var(--sawah-light);">
                             @if($b->thumbnail_path)
@@ -214,8 +329,14 @@
 
 {{-- ============ AGENDA + POTENSI ============ --}}
 @if($agendaTerdekat->count() || $potensiSorotan->count())
-    <section class="border-t" style="border-color: var(--garis); background: var(--kertas);">
-        <div class="wadah py-14 grid lg:grid-cols-2 gap-10 lg:gap-14">
+    @php
+        // Bila hanya salah satu yang terisi, jangan dipaksa dua kolom
+        // agar tidak menyisakan bidang kosong di sebelahnya.
+        $duaKolom = $agendaTerdekat->count() && $potensiSorotan->count();
+    @endphp
+
+    <section class="pola-titik lengkung-atas" style="background: var(--kertas);">
+        <div class="wadah py-11 grid {{ $duaKolom ? 'lg:grid-cols-2 gap-10 lg:gap-14' : 'gap-10' }}">
 
             @if($agendaTerdekat->count())
                 <div>
@@ -228,24 +349,27 @@
                            style="color: var(--padi);">Semua</a>
                     </div>
 
-                    <div class="kartu overflow-hidden">
-                        @foreach ($agendaTerdekat as $a)
-                            <div class="reveal-kiri flex gap-4 p-4 {{ !$loop->last ? 'border-b' : '' }}"
-                                 style="border-color: var(--garis); transition-delay: {{ $loop->index * 60 }}ms;">
-                                <div class="shrink-0 w-12 text-center rounded-lg py-1.5"
-                                     style="background: var(--sawah-light); color: var(--sawah-dark);">
-                                    <p class="text-[10px] uppercase font-semibold tracking-wide">{{ $a->tanggal_mulai->translatedFormat('M') }}</p>
-                                    <p class="font-display text-base font-bold leading-none mt-0.5">{{ $a->tanggal_mulai->format('d') }}</p>
-                                </div>
-                                <div class="min-w-0">
+                    {{-- Disusun sebagai garis waktu agar urutan kegiatan terbaca jelas --}}
+                    <div class="kartu p-5 sm:p-6">
+                        <div class="garis-waktu space-y-5">
+                            @foreach ($agendaTerdekat as $a)
+                                <div class="titik-waktu reveal-kiri"
+                                     style="transition-delay: {{ $loop->index * 70 }}ms;">
+
+                                    <p class="text-[11px] font-semibold uppercase tracking-wide mb-1"
+                                       style="color: var(--padi);">
+                                        {{ $a->tanggal_mulai->translatedFormat('l, d F Y') }}
+                                    </p>
+
                                     <h3 class="font-display text-sm font-semibold leading-snug">{{ $a->judul }}</h3>
+
                                     <p class="text-xs mt-1" style="color: var(--lembut);">
-                                        {{ $a->tanggal_mulai->translatedFormat('H:i') }}
+                                        Pukul {{ $a->tanggal_mulai->translatedFormat('H:i') }}
                                         @if($a->lokasi) &middot; {{ $a->lokasi }} @endif
                                     </p>
                                 </div>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     </div>
                 </div>
             @endif
@@ -289,21 +413,45 @@
     </section>
 @endif
 
+{{--============ STRUKTUR ORGANISASI & TUPOKSI ============ --}}
+@if($perangkat->count())
+    <section class="pola-petak lengkung-atas" style="background: var(--kertas);">
+        <div class="wadah py-11">
+            <div class="reveal mb-7">
+                <p class="label-bagian">Pemerintahan Desa</p>
+                <h2 class="font-display text-2xl font-bold mt-1.5">Perangkat Desa dan Tugasnya</h2>
+                <p class="text-sm mt-2 max-w-2xl leading-relaxed" style="color: var(--lembut);">
+                    Susunan pemerintahan Desa {{ $profil->nama_desa ?? 'Cibiuk' }} beserta
+                    tugas pokok masing-masing bagian.
+                </p>
+            </div>
+
+            <div class="space-y-6">
+                @include('partials.struktur-organisasi')
+            </div>
+        </div>
+    </section>
+@endif
+
 {{-- ============ KANTOR DESA & JAM PELAYANAN ============ --}}
 @php
     $adaKontak = $profil?->alamat_kantor || $profil?->telepon || $profil?->email;
     $jamPelayanan = $profil?->baris_jam_pelayanan ?? [];
+
+    // Bila hanya satu kartu yang terisi, tampilkan melebar penuh
+    // agar tidak menyisakan bidang kosong di sebelahnya.
+    $duaKartu = $adaKontak && count($jamPelayanan);
 @endphp
 
 @if($adaKontak || count($jamPelayanan))
     <section class="border-t" style="border-color: var(--garis);">
-        <div class="wadah py-14">
+        <div class="wadah py-11">
             <div class="reveal mb-7">
                 <p class="label-bagian">Pelayanan</p>
                 <h2 class="font-display text-2xl font-bold mt-1.5">Kantor Desa</h2>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-5">
+            <div class="grid {{ $duaKartu ? 'lg:grid-cols-2' : '' }} gap-5">
 
                 {{-- Jam pelayanan --}}
                 @if(count($jamPelayanan))
@@ -320,7 +468,9 @@
                             <h3 class="font-display text-base font-semibold">Jam Pelayanan</h3>
                         </div>
 
-                        <ul>
+                        {{-- Bila kartunya melebar penuh, daftar hari dibuat dua kolom
+                             supaya tidak memanjang ke bawah dengan ruang kosong di kanan. --}}
+                        <ul class="{{ $duaKartu ? '' : 'sm:grid sm:grid-cols-2 sm:gap-x-10' }}">
                             @foreach ($jamPelayanan as $baris)
                                 @php
                                     // "Senin – Kamis: 08.00 – 15.00" dipecah jadi hari dan jamnya
@@ -329,7 +479,7 @@
                                     $jam = isset($bagian[1]) ? trim($bagian[1]) : null;
                                     $tutup = $jam && str_contains(strtolower($jam), 'tutup');
                                 @endphp
-                                <li class="flex items-center justify-between gap-4 py-2.5 {{ !$loop->last ? 'border-b' : '' }}"
+                                <li class="flex items-center justify-between gap-4 py-2.5 border-b"
                                     style="border-color: var(--garis);">
                                     <span class="text-sm font-medium">{{ $hari }}</span>
                                     @if($jam)
@@ -341,6 +491,17 @@
                                 </li>
                             @endforeach
                         </ul>
+
+                        {{-- Ajakan menghubungi, mengisi ruang bawah kartu sekaligus
+                             memberi jalan bagi warga di luar jam pelayanan. --}}
+                        <p class="text-xs mt-5 leading-relaxed" style="color: var(--lembut);">
+                            Di luar jam pelayanan, keluhan tetap dapat disampaikan melalui
+                            <a href="{{ route('pengaduan.create') }}"
+                               class="font-medium hover:underline underline-offset-4" style="color: var(--padi);">
+                                layanan pengaduan
+                            </a>
+                            kapan saja.
+                        </p>
                     </div>
                 @endif
 
@@ -402,9 +563,26 @@
 
 {{-- ============ AJAKAN PENGADUAN ============ --}}
 <section class="border-t" style="border-color: var(--garis);">
-    <div class="wadah py-14">
-        <div class="reveal-skala rounded-xl overflow-hidden" style="background: var(--sawah-dark);">
-            <div class="p-8 sm:p-10 grid lg:grid-cols-5 gap-8 items-center text-white">
+    <div class="wadah py-11">
+        <div class="reveal-skala relative rounded-xl overflow-hidden" style="background: var(--sawah-dark);">
+
+            {{-- Foto desa sebagai latar, dengan lapisan hijau pekat
+                 agar tulisan putih tetap terbaca jelas. --}}
+            @if($profil?->foto_hero_path)
+                <img src="{{ Storage::url($profil->foto_hero_path) }}" alt=""
+                     class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0"
+                     style="background: linear-gradient(115deg, rgba(9,63,40,.94) 0%, rgba(9,63,40,.86) 55%, rgba(9,63,40,.62) 100%);"></div>
+            @endif
+
+            {{-- hiasan latar: pola titik dan dua lingkaran samar --}}
+            <div class="pola-titik-terang absolute inset-0"></div>
+            <span class="bulat-hias" style="width: 260px; height: 260px; right: -70px; top: -90px;
+                  background: radial-gradient(circle, rgba(167,217,190,.16), transparent 70%);"></span>
+            <span class="bulat-hias" style="width: 180px; height: 180px; left: -50px; bottom: -70px;
+                  background: radial-gradient(circle, rgba(167,217,190,.12), transparent 70%);"></span>
+
+            <div class="relative p-8 sm:p-10 grid lg:grid-cols-5 gap-8 items-center text-white">
 
                 <div class="lg:col-span-3">
                     <p class="label-bagian" style="color: rgba(255,255,255,0.6);">Layanan Warga</p>

@@ -82,6 +82,7 @@
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: var(--kertas);
             color: var(--ink);
+            overflow-x: clip; 
         }
 
         /* institusional = seluruhnya sans-serif, tanpa serif dekoratif */
@@ -169,16 +170,28 @@
         .wadah {
             width: 100%;
             margin-inline: auto;
-            max-width: 1720px;
+            max-width: 1536px;
             padding-inline: 20px;
         }
         @media (min-width: 640px)  { .wadah { padding-inline: 32px; } }
         @media (min-width: 1024px) { .wadah { padding-inline: 56px; } }
         @media (min-width: 1280px) { .wadah { padding-inline: 80px; } }
 
+        /* Navigasi sengaja tanpa batas lebar agar logo menempel ke tepi kiri
+           dan tombol ke tepi kanan, berapa pun lebar layarnya. */
+        .wadah-nav {
+            width: 100%;
+            max-width: none;
+            padding-inline: 20px;
+        }
+        @media (min-width: 640px)  { .wadah-nav { padding-inline: 28px; } }
+        @media (min-width: 1024px) { .wadah-nav { padding-inline: 40px; } }
+        @media (min-width: 1280px) { .wadah-nav { padding-inline: 52px; } }
+        @media (min-width: 1536px) { .wadah-nav { padding-inline: 64px; } }
+
         /* Blok teks panjang tetap dibatasi agar nyaman dibaca,
            karena baris yang terlalu lebar melelahkan mata. */
-        .teks-baca { max-width: 78ch; }
+        .teks-baca { max-width: 74ch; }
 
         /* ---- Tautan pada navigasi ---- */
         .tautan-nav {
@@ -301,6 +314,107 @@
             }
         }
 
+        /* ============================================================
+           DEKORASI LATAR
+           Motif samar yang membuat bidang kosong tidak terasa hampa,
+           tanpa mengganggu keterbacaan isi di atasnya.
+           ============================================================ */
+
+        /* Pola titik halus, untuk latar terang */
+        .pola-titik {
+            background-image: radial-gradient(circle, rgba(14,92,58,.10) 1.1px, transparent 1.1px);
+            background-size: 22px 22px;
+        }
+
+        /* Pola garis miring tipis, mengingatkan pada petak sawah */
+        .pola-petak {
+            background-image: repeating-linear-gradient(
+                -45deg,
+                rgba(14,92,58,.045) 0px, rgba(14,92,58,.045) 1px,
+                transparent 1px, transparent 14px
+            );
+        }
+
+        /* Pola titik untuk latar hijau tua */
+        .pola-titik-terang {
+            background-image: radial-gradient(circle, rgba(255,255,255,.09) 1.1px, transparent 1.1px);
+            background-size: 24px 24px;
+        }
+
+        /* Lingkaran besar samar sebagai pengisi bidang kosong */
+        .bulat-hias {
+            position: absolute;
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        /* Pemisah bermotif anyaman antar bagian */
+        .pemisah-motif {
+            height: 10px;
+            background-image:
+                repeating-linear-gradient(45deg,  rgba(14,92,58,.14) 0 5px, transparent 5px 11px),
+                repeating-linear-gradient(-45deg, rgba(14,92,58,.14) 0 5px, transparent 5px 11px);
+        }
+
+        /* Aksen garis pada sisi kiri kartu */
+        .kartu-aksen { position: relative; overflow: hidden; }
+        .kartu-aksen::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 0; bottom: 0;
+            width: 3px;
+            background: var(--padi);
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform .28s ease;
+        }
+        .kartu-aksen:hover::before { transform: scaleY(1); }
+
+        @media (prefers-reduced-motion: reduce) {
+            .kartu-aksen::before { transition: none; }
+        }
+
+        /* ---- Pemisah melengkung antar bagian ----
+           Digambar dengan CSS agar tidak menambah permintaan berkas. */
+        .lengkung-atas {
+            position: relative;
+            overflow: hidden;   /* tambahkan baris ini */
+        }
+        .lengkung-atas::before {
+            content: '';
+            position: absolute;
+            left: -5%;
+            right: -5%;
+            top: -34px;
+            height: 68px;
+            border-radius: 50% / 100% 100% 0 0;
+            background: inherit;
+            pointer-events: none;
+        }
+
+        /* ---- Garis waktu agenda ---- */
+        .garis-waktu { position: relative; padding-left: 30px; }
+        .garis-waktu::before {
+            content: '';
+            position: absolute;
+            left: 8px; top: 6px; bottom: 6px;
+            width: 2px;
+            background: linear-gradient(180deg, var(--padi) 0%, var(--garis) 100%);
+            border-radius: 2px;
+        }
+        .titik-waktu { position: relative; }
+        .titik-waktu::before {
+            content: '';
+            position: absolute;
+            left: -30px; top: 14px;
+            width: 12px; height: 12px;
+            border-radius: 999px;
+            background: #fff;
+            border: 3px solid var(--padi);
+            box-shadow: 0 0 0 3px var(--kertas);
+        }
+        .titik-waktu:first-child::before { background: var(--padi); }
+
         /* ---- Penanda gulir pada hero ---- */
         @keyframes turun-naik {
             0%, 100% { transform: translateY(0); }
@@ -343,7 +457,7 @@
 
     <header class="text-white z-30 {{ $headerTembus ? 'absolute inset-x-0 top-0 header-tembus' : 'terrace-texture sticky top-0' }}"
             style="{{ $headerTembus ? '' : 'background: var(--sawah-dark);' }}">
-        <div class="wadah py-4 md:py-6 flex items-center justify-between gap-6">
+        <div class="wadah-nav py-4 md:py-6 flex items-center justify-between gap-6">
 
             <a href="{{ route('beranda') }}" class="flex items-center gap-3 shrink-0">
                 @if(($profilGlobal->logo_path ?? null))
@@ -379,14 +493,14 @@
                 <div class="nav-group relative">
                     <button type="button" aria-expanded="false" aria-haspopup="true"
                             class="tautan-nav {{ $aktifProfil ? 'aktif' : '' }}">
-                        Profile
+                        Profil
                         <svg class="w-4 h-4 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
                         </svg>
                     </button>
                     <div class="nav-panel absolute left-0 top-full pt-2 z-40">
                         <div class="bg-white rounded-xl shadow-xl py-2.5 min-w-[240px]">
-                            <a href="{{ route('profil.index') }}" class="block px-5 py-3 text-[15px] text-[var(--ink)] hover:bg-black/[0.04] whitespace-nowrap">Profile Desa</a>
+                            <a href="{{ route('profil.index') }}" class="block px-5 py-3 text-[15px] text-[var(--ink)] hover:bg-black/[0.04] whitespace-nowrap">Profil Desa</a>
                             <a href="{{ route('infografis.penduduk') }}" class="block px-5 py-3 text-[15px] text-[var(--ink)] hover:bg-black/[0.04] whitespace-nowrap">Infografis Penduduk</a>
                             <a href="{{ route('potensi.index') }}" class="block px-5 py-3 text-[15px] text-[var(--ink)] hover:bg-black/[0.04] whitespace-nowrap">Potensi Desa</a>
                             <a href="{{ route('peta.index') }}" class="block px-5 py-3 text-[15px] text-[var(--ink)] hover:bg-black/[0.04] whitespace-nowrap">Peta Wilayah</a>
@@ -448,7 +562,7 @@
         </div>
 
         <nav id="mobile-nav" class="md:hidden max-h-0 overflow-hidden opacity-0">
-            <div class="px-6 py-4 border-t border-white/10 space-y-4">
+            <div class="wadah-nav py-4 border-t border-white/10 space-y-4">
 
                 {{-- kolom pencarian ditaruh paling atas agar mudah dijangkau dari HP --}}
                 <form method="GET" action="{{ route('pencarian.index') }}" class="relative">
@@ -467,8 +581,8 @@
                 <a href="{{ route('beranda') }}" class="block py-2 text-sm text-white/85">Beranda</a>
 
                 <div>
-                    <p class="text-[10px] uppercase tracking-widest text-white/40 mb-1">Profile</p>
-                    <a href="{{ route('profil.index') }}" class="block py-2 text-sm text-white/85">Profile Desa</a>
+                    <p class="text-[10px] uppercase tracking-widest text-white/40 mb-1">Profil</p>
+                    <a href="{{ route('profil.index') }}" class="block py-2 text-sm text-white/85">Profil Desa</a>
                     <a href="{{ route('infografis.penduduk') }}" class="block py-2 text-sm text-white/85">Infografis Penduduk</a>
                     <a href="{{ route('potensi.index') }}" class="block py-2 text-sm text-white/85">Potensi Desa</a>
                     <a href="{{ route('peta.index') }}" class="block py-2 text-sm text-white/85">Peta Wilayah</a>
@@ -541,7 +655,7 @@
             <div>
                 <p class="text-[11px] uppercase tracking-widest mb-3" style="color: var(--padi-light);">Tautan Cepat</p>
                 <ul class="space-y-2 text-sm text-white/70">
-                    <li><a href="{{ route('profil.index') }}" class="hover:text-white transition">Profile Desa</a></li>
+                    <li><a href="{{ route('profil.index') }}" class="hover:text-white transition">Profil Desa</a></li>
                     <li><a href="{{ route('infografis.penduduk') }}" class="hover:text-white transition">Infografis Penduduk</a></li>
                     <li><a href="{{ route('potensi.index') }}" class="hover:text-white transition">Potensi Desa</a></li>
                     <li><a href="{{ route('berita.index') }}" class="hover:text-white transition">Berita &amp; Pengumuman</a></li>
@@ -648,7 +762,16 @@
                 });
             }, { threshold: 0.12 });
 
-            document.querySelectorAll('.reveal, .reveal-kiri, .reveal-kanan, .reveal-skala').forEach((el) => pengamat.observe(el));
+            document.querySelectorAll('.reveal, .reveal-kiri, .reveal-kanan, .reveal-skala').forEach((el) => {
+                // Isi yang sudah tampak sejak awal langsung ditampilkan,
+                // agar tidak sempat terlihat kosong saat halaman dibuka.
+                const posisi = el.getBoundingClientRect();
+                if (posisi.top < window.innerHeight * 0.92) {
+                    el.classList.add('tampil');
+                    return;
+                }
+                pengamat.observe(el);
+            });
         } else {
             document.querySelectorAll('.reveal, .reveal-kiri, .reveal-kanan, .reveal-skala').forEach((el) => el.classList.add('tampil'));
         }

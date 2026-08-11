@@ -30,7 +30,7 @@
     @csrf
 
     {{-- ANONIM TOGGLE --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-5">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-5">
         <label class="flex items-start gap-3 cursor-pointer">
             <input type="checkbox" name="anonim" value="1" id="anonim-check" class="mt-1 rounded border-black/20">
             <span>
@@ -52,7 +52,7 @@
     </div>
 
     {{-- KATEGORI & DUSUN --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-5 grid sm:grid-cols-2 gap-4">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-5 grid sm:grid-cols-2 gap-4">
         <div>
             <label class="text-xs text-black/50 mb-1 block">Kategori Laporan</label>
             <select name="kategori_laporan_id" required class="w-full rounded-lg border-black/10 text-sm">
@@ -74,7 +74,7 @@
     </div>
 
     {{-- JUDUL & DESKRIPSI --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-5 space-y-4">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-5 space-y-4">
         <div>
             <label class="text-xs text-black/50 mb-1 block">Judul Laporan</label>
             <input type="text" name="judul" value="{{ old('judul') }}" required maxlength="150"
@@ -94,7 +94,7 @@
 
     {{-- LOKASI - LEAFLET + OPENSTREETMAP --}}
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <div class="bg-white rounded-2xl border border-black/5 p-5">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-5">
         <label class="text-xs text-black/50 mb-2 block">Titik Lokasi Kejadian</label>
         <p class="text-xs text-black/40 mb-3">Klik pada peta atau geser marker untuk menandai lokasi kejadian.</p>
 
@@ -111,7 +111,7 @@
     </div>
 
     {{-- FOTO --}}
-    <div class="bg-white rounded-2xl border border-black/5 p-5">
+    <div class="reveal bg-white rounded-2xl border border-black/5 p-5">
         <label class="text-xs text-black/50 mb-1 block">Foto Pendukung (maks. 5)</label>
         <input type="file" name="foto[]" multiple accept="image/*" class="w-full text-sm">
     </div>
@@ -147,22 +147,6 @@
         maxZoom: 19,
     }).addTo(map);
 
-
-    // ---- Lapisan wilayah dari data peta desa ----
-    @foreach ($layerPeta as $lp)
-        fetch(@json($lp['url']))
-            .then(r => r.json())
-            .then(data => L.geoJSON(data, {
-                style: {
-                    color: @json($lp['warna']),
-                    weight: 2,
-                    fillColor: @json($lp['warna']),
-                    fillOpacity: {{ $lp['opasitas'] }},
-                },
-                interactive: false,   // agar tidak menghalangi penandaan lokasi
-            }).addTo(map))
-            .catch(() => console.warn('Lapisan peta gagal dimuat:', @json($lp['nama'])));
-    @endforeach
 
     const marker = L.marker([pusatDesa.lat, pusatDesa.lng], { draggable: true }).addTo(map);
 

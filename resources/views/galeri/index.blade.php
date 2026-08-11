@@ -39,7 +39,7 @@
 
                 @if($g->tipe === 'foto')
                     <button onclick="bukaLightbox('{{ Storage::url($g->file_path) }}', '{{ addslashes($g->judul) }}')"
-                            class="group relative rounded-xl overflow-hidden bg-[var(--sawah-light)] {{ $span }} {{ $besar || $lebar ? '' : 'aspect-square' }}">
+                            class="reveal-skala group relative rounded-xl overflow-hidden bg-[var(--sawah-light)] {{ $span }} {{ $besar || $lebar ? '' : 'aspect-square' }}">
                         <img src="{{ Storage::url($g->file_path) }}" alt="{{ $g->judul }}"
                              class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                         <span class="absolute inset-x-0 bottom-0 p-3 text-left text-white text-xs bg-gradient-to-t from-black/65 to-transparent opacity-0 group-hover:opacity-100 transition">
@@ -57,7 +57,7 @@
                     @else
                         {{-- alamat video di luar YouTube: tidak bisa disematkan, buka di tab baru --}}
                         <a href="{{ $g->url_tonton }}" target="_blank" rel="noopener"
-                           class="group relative rounded-xl overflow-hidden bg-black flex items-center justify-center {{ $span }} {{ $besar || $lebar ? '' : 'aspect-square' }}">
+                           class="reveal-skala group relative rounded-xl overflow-hidden bg-black flex items-center justify-center {{ $span }} {{ $besar || $lebar ? '' : 'aspect-square' }}">
                     @endif
 
                         {{-- tombol putar --}}

@@ -10,7 +10,7 @@ class PerangkatDesa extends Model
     protected $table = 'perangkat_desa';
 
     protected $fillable = [
-        'nama', 'jabatan', 'atasan_jabatan', 'dusun_id', 'foto_path', 'urutan',
+        'nama', 'jabatan','tupoksi', 'atasan_jabatan', 'dusun_id', 'foto_path', 'urutan',
     ];
 
     public function dusun(): BelongsTo

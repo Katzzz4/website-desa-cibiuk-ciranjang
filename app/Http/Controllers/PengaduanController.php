@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Dusun;
 use App\Models\ProfilDesa;
-use App\Models\PetaLayer;
 use App\Models\KategoriLaporan;
 use App\Models\Laporan;
 use App\Models\LaporanFoto;
@@ -20,11 +19,7 @@ class PengaduanController extends Controller
 
         $titikPeta = (ProfilDesa::first()?->titik_peta) ?? ProfilDesa::KOORDINAT_CADANGAN;
 
-        // lapisan batas wilayah membantu warga mengenali area desa saat menandai lokasi
-        $layerPeta = PetaLayer::aktif()->where('tampil_di_pengaduan', true)
-            ->get()->map(fn ($l) => $l->untukPeta());
-
-        return view('pengaduan.create', compact('kategori', 'dusun', 'titikPeta', 'layerPeta'));
+        return view('pengaduan.create', compact('kategori', 'dusun', 'titikPeta'));
     }
 
     public function store(Request $request)
