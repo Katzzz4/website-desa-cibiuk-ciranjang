@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\TransparansiController;
 use App\Http\Controllers\PencarianController;
 use App\Http\Controllers\PetaWilayahController;
+use App\Http\Controllers\SitemapController;
 
 // ====================================================================
 // HALAMAN PUBLIK
@@ -56,6 +57,9 @@ Route::prefix('pengaduan')->name('pengaduan.')->group(function () {
     Route::get('/lacak', [PengaduanController::class, 'formLacak'])->name('lacak.form');
     Route::post('/lacak', [PengaduanController::class, 'lacak'])->name('lacak');
 });
+
+Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
+Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 // ====================================================================
 // AKUN (BAWAAN BREEZE)
